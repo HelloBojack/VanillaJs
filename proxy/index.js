@@ -8,11 +8,13 @@ let obj = {
 }
 
 obj = new Proxy(obj, {
-  get(target, prop) {
-    return target[prop]
+  get(target, key) {
+    // return target[prop]
+    return Reflect.get(target, key)
   },
-  set(target, prop, value) {
-    target[prop] = value
+  set(target, key, value) {
+    // target[key] = value
+    Reflect.set(target, key, value)
     pDom.innerHTML = value
     inputDom.value = value
   }
