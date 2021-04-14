@@ -1,10 +1,11 @@
 console.log('debounce.js')
 
+//连续的触发只触发一次（搜索框）
 function debounceFn(fn, delay) {
-  let timer;
+  let flg = null
   return () => {
-    clearTimeout(timer)
-    timer = setTimeout(() => {
+    flg && (clearTimeout(flg))
+    flg = setTimeout(() => {
       fn()
     }, delay)
   }
