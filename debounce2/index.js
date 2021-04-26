@@ -1,6 +1,6 @@
 console.log('debounce.js')
 
-function debounceFn(fn, delay, immediate) {
+function debounceFn(fn, delay) {
   let timer = null;
   return function () {
     if (timer) {
