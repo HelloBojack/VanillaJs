@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+  <div>
+    <p>
+      Clicked: <span id="value"></span> times
+      <button id="increment">+</button>
+      <button id="decrement">-</button>
+      <button id="incrementIfOdd">Increment if odd</button>
+      <button id="incrementAsync">Increment async</button>
+    </p>
+  </div>
+</body>
+<script src="https://unpkg.com/redux@4.1.1/dist/redux.js"></script>
+<script>
+  const reducer = (state, action) => {
+    if (typeof state === 'undefined') {
+      return 0
+    }
+    switch (action.type) {
+      case 'INCREMENT':
+        return state + 1
+      case 'DECREMENT':
+        return state - 1
+      default:
+        return state
+    }
+  }
+  const store = Redux.createStore(reducer)
+
+  function render() {
+    document.getElementById('value').innerHTML = store.getState().toString();
+  }
+  render()
+  store.subscribe(render)
+
+  document.getElementById('increment').addEventListener('click', () => store.dispatch({ type: 'INCREMENT' }))
+  document.getElementById('decrement').addEventListener('click', () => store.dispatch({ type: 'DECREMENT' }))
+  document.getElementById('incrementIfOdd').addEventListener('click', () => {
+    if (store.getState() % 2 !== 0) {
+      store.dispatch({ type: 'INCREMENT' })
+    }
+  })
+  document.getElementById('incrementAsync').addEventListener('click', () => {
+    setTimeout(() => {
+      store.dispatch({ type: 'INCREMENT' })
+    }, 1000)
+  })
+</script>
+
+</html>
