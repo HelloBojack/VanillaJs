@@ -1,30 +1,14 @@
-Function.prototype.myCall = function (context = window, ...args) {
-
+Function.prototype.myApply = function (context, args = []) {
+  context = context || window
   context.$fn = this
-  context.$fn(...args)
+  let result = context.$fn(...args)
   delete context.$fn
-  return this
+  return result
 }
 
 function fn() {
   console.log(this.name)
 }
 
-let obj = {
-  name: 'k'
-}
-
-var name = 'x'
-fn()
-// obj.fn()
-fn.myCall(obj)
-fn.myCall()
-
-
-function f1() { console.log(1) }
-function f2() { console.log(2) }
-
-f1.call(f2)
-f1.call.call(f2)
-Function.prototype.call(f1)
-Function.prototype.call.call(f1)
+// console.log(Math.min.apply(window, [1, 2, 3, 4, 5]))
+console.log(Math.min.myApply(null, [1, 2, 3, 4, 5]))
