@@ -20,3 +20,11 @@ fn()
 fn.myCall(obj)
 fn.myCall()
 
+
+function f1() { console.log(1) }
+function f2() { console.log(2) }
+
+f1.call(f2)
+f1.call.call(f2)
+Function.prototype.call(f1)
+Function.prototype.call.call(f1)
