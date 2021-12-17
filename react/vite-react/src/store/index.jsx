@@ -1,5 +1,7 @@
-import { useContext, useEffect, useState } from 'react'
-import { UserContext } from '../context/index'
+import { useContext, useEffect, useState, createContext } from 'react'
+
+export const Context = createContext(null)
+
 const reducer = (state, action) => {
   let { type, playload } = action;
   switch (type) {
@@ -27,13 +29,12 @@ export const store = {
 export const connect = (Component) => {
   return (props) => {
     const [_, update] = useState({});
-    const { state, setState, subscribe } = useContext(UserContext);
+    const { state, setState, subscribe } = useContext(Context);
     useEffect(() => {
       subscribe(update);
     }, [])
     const dispatch = (action) => {
       setState(reducer(state, action))
-      // update({});
     }
     return <Component dispatch={dispatch} state={state} {...props} />
   }

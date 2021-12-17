@@ -1,5 +1,3 @@
-import { useContext } from 'react';
-import { UserContext } from '../context/index'
 import { connect } from '../store/index'
 const UserInfo = ({ state }) => {
   console.log('UserInfo.jsx render');

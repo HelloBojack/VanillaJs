@@ -4,7 +4,7 @@ import SecendChild from "./components/SecendChild"
 import LastChild from "./components/LastChild"
 import UserInfo from "./components/UserInfo"
 import UserInfoSet from "./components/UserInfoSet"
-import { UserContext } from './context/index'
+import { Context } from './store/index'
 import { store } from './store/index'
 
 function App() {
@@ -14,11 +14,11 @@ function App() {
     <div className="App">
       <div className="child">App</div>
 
-      <UserContext.Provider value={store}>
+      <Context.Provider value={store}>
         <FirstChild></FirstChild>
         <SecendChild><UserInfo></UserInfo></SecendChild>
         <LastChild><UserInfoSet></UserInfoSet></LastChild>
-      </UserContext.Provider>
+      </Context.Provider>
     </div>
   )
 }
