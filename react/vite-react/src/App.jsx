@@ -4,12 +4,11 @@ import SecendChild from "./components/SecendChild"
 import LastChild from "./components/LastChild"
 import UserInfo from "./components/UserInfo"
 import UserInfoSet from "./components/UserInfoSet"
-import { Context } from './store/index'
-import { store } from './store/index'
+import { Context } from './store/reducer'
+import store from './store/index'
 
 function App() {
   console.log('App.jsx render');
-
   return (
     <div className="App">
       <div className="child">App</div>

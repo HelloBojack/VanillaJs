@@ -2,18 +2,15 @@ import { useContext, useEffect, useState, createContext } from 'react'
 
 export const Context = createContext(null)
 
-const reducer = (state, action) => {
-  let { type, playload } = action;
-  switch (type) {
-    case 'UPDATE_USER':
-      return { ...state, user: { ...state.user, ...playload } };
-  }
+export const createReducer = (initialState, reducer) => {
+  store.state = initialState;
+  store.reducer = reducer;
+  return store
 }
-export const store = {
-  state: {
-    user: { name: 'Bojack', age: 24 },
-    group: 'Frondend'
-  },
+
+const store = {
+  state: {},
+  reducer: {},
   setState(newState) {
     store.state = newState
     store.listeners.map(listener => listener(store.state))
@@ -27,6 +24,7 @@ export const store = {
     }
   },
 }
+
 const isChanged = (oldState, newState) => {
   let flag = false;
   for (let key in oldState) {
@@ -37,11 +35,17 @@ const isChanged = (oldState, newState) => {
   }
   return flag
 }
-export const connect = (selector) => (Component) => {
+
+export const connect = (selector, dispatcher) => (Component) => {
   return (props) => {
+    const { state, setState, subscribe, reducer } = useContext(Context);
+    const dispatch = (action) => {
+      setState(reducer(state, action))
+    }
     const [_, update] = useState({});
-    const { state, setState, subscribe } = useContext(Context);
+
     const data = selector ? selector(state) : { state };
+    const dispatcherFn = dispatcher ? dispatcher(dispatch) : dispatch;
 
     useEffect(() => subscribe(() => {
       const newData = selector ? selector(store.state) : { state: store.state };
@@ -50,10 +54,9 @@ export const connect = (selector) => (Component) => {
       }
     }), [selector])
 
-    const dispatch = (action) => {
-      setState(reducer(state, action))
-    }
-
-    return <Component dispatch={dispatch} {...data} {...props} />
+    return <Component {...props}  {...data}  {...dispatcherFn} />
   }
 }
+
+
+

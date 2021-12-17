@@ -1,4 +1,5 @@
-import { connect } from '../store/index'
+import { connectToUser } from '../store/connects/connectToUser'
+
 const UserInfo = ({ user }) => {
   console.log('UserInfo.jsx render');
   return <>
@@ -6,4 +7,4 @@ const UserInfo = ({ user }) => {
     <div>User Age:{user.age}</div>
   </>
 }
-export default connect(state => ({ user: state.user }))(UserInfo);
+export default connectToUser(UserInfo);

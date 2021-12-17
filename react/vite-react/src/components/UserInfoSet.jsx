@@ -1,8 +1,8 @@
-import { connect } from '../store/index'
+import { connectToUser } from '../store/connects/connectToUser'
 
-const UserInfo = ({ user, dispatch }) => {
+const UserInfo = ({ user, updateUser }) => {
   console.log('UserInfoSet.jsx render');
-  const onChange = (e) => dispatch({ type: "UPDATE_USER", playload: { age: e.target.value } })
+  const onChange = (e) => updateUser({ age: e.target.value })
   // setUserState({ ...userState, age: e.target.value })
   // setUserState(reducer(userState, { type: "UPDATE", playload: { age: e.target.value } }))
   return <>
@@ -10,4 +10,4 @@ const UserInfo = ({ user, dispatch }) => {
   </>
 }
 
-export default connect(state => ({ user: state.user }))(UserInfo);
+export default connectToUser(UserInfo);

@@ -1,4 +1,4 @@
-import { connect } from '../store/index'
+import { connect } from '../store/reducer'
 const FirstChild = ({ group }) => {
   console.log('FirstChild.jsx render');
   return <div className='child'>
