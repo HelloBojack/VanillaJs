@@ -1,11 +1,11 @@
 import { useContext } from 'react';
 import { UserContext } from '../context/index'
-const UserInfo = () => {
+import { connect } from '../store/index'
+const UserInfo = ({ state }) => {
   console.log('UserInfo.jsx render');
-  const { state } = useContext(UserContext);
   return <>
     <div>User Name:{state.user.name}</div>
     <div>User Age:{state.user.age}</div>
   </>
 }
-export default UserInfo;
+export default connect(UserInfo);
