@@ -27,17 +27,33 @@ export const store = {
     }
   },
 }
+const isChanged = (oldState, newState) => {
+  let flag = false;
+  for (let key in oldState) {
+    if (oldState[key] !== newState[key]) {
+      flag = true;
+      break;
+    }
+  }
+  return flag
+}
 export const connect = (selector) => (Component) => {
   return (props) => {
     const [_, update] = useState({});
     const { state, setState, subscribe } = useContext(Context);
-    useEffect(() => {
-      subscribe(update);
-    }, [])
+    const data = selector ? selector(state) : { state };
+
+    useEffect(() => subscribe(() => {
+      const newData = selector ? selector(store.state) : { state: store.state };
+      if (isChanged(data, newData)) {
+        update({})
+      }
+    }), [selector])
+
     const dispatch = (action) => {
       setState(reducer(state, action))
     }
-    const data = selector ? selector(state) : { state };
+
     return <Component dispatch={dispatch} {...data} {...props} />
   }
 }

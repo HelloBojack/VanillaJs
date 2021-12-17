@@ -10,4 +10,4 @@ const UserInfo = ({ user, dispatch }) => {
   </>
 }
 
-export default connect(state => { return { user: state.user } })(UserInfo);
+export default connect(state => ({ user: state.user }))(UserInfo);

@@ -1,10 +1,9 @@
 import { connect } from '../store/index'
-const FirstChild = ({ state }) => {
+const FirstChild = ({ group }) => {
   console.log('FirstChild.jsx render');
-  console.log(state)
   return <div className='child'>
     First Child
-    <div>{state.group}</div>
+    <div>{group}</div>
   </div>
 }
-export default connect()(FirstChild);
+export default connect(state => ({ group: state.group }))(FirstChild);
