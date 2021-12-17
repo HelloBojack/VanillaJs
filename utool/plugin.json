@@ -1,0 +1,11 @@
+{
+  "main": "index.html",
+  "logo": "logo.png",
+  "features": [
+    {
+      "code": "摸鱼",
+      "explain": "摸鱼",
+      "cmds": ["摸鱼"]
+    }
+  ]
+}
