@@ -12,6 +12,7 @@ const reducer = (state, action) => {
 export const store = {
   state: {
     user: { name: 'Bojack', age: 24 },
+    group: 'Frondend'
   },
   setState(newState) {
     store.state = newState
@@ -26,7 +27,7 @@ export const store = {
     }
   },
 }
-export const connect = (Component) => {
+export const connect = (selector) => (Component) => {
   return (props) => {
     const [_, update] = useState({});
     const { state, setState, subscribe } = useContext(Context);
@@ -36,6 +37,7 @@ export const connect = (Component) => {
     const dispatch = (action) => {
       setState(reducer(state, action))
     }
-    return <Component dispatch={dispatch} state={state} {...props} />
+    const data = selector ? selector(state) : { state };
+    return <Component dispatch={dispatch} {...data} {...props} />
   }
 }
