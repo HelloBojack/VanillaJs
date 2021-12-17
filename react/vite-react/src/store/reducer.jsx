@@ -1,7 +1,11 @@
 import { useContext, useEffect, useState, createContext } from 'react'
 
-export const Context = createContext(null)
-
+const Context = createContext(null)
+export const Provider = ({ store, children }) => {
+  return (<Context.Provider value={store}>
+    {children}
+  </Context.Provider >)
+}
 export const createReducer = (initialState, reducer) => {
   store.state = initialState;
   store.reducer = reducer;
