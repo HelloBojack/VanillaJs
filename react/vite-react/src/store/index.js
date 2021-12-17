@@ -6,10 +6,10 @@ const initialState = {
 }
 
 const reducer = (state, action) => {
-  let { type, playload } = action;
+  let { type, payload } = action;
   switch (type) {
     case 'UPDATE_USER':
-      return { ...state, user: { ...state.user, ...playload } };
+      return { ...state, user: { ...state.user, ...payload } };
   }
 }
 

@@ -41,6 +41,15 @@ dispatch = (action) => {
     preDispatch(action)
   }
 }
+const preDispatch2 = dispatch
+dispatch = (action) => {
+  if (action.payload instanceof Promise) {
+    action.payload.then(res => dispatch({ type: action.type, payload: res }))
+  } else {
+    preDispatch2(action)
+  }
+
+}
 
 const isChanged = (oldState, newState) => {
   let flag = false;
