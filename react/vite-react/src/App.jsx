@@ -5,18 +5,16 @@ import LastChild from "./components/LastChild"
 import UserInfo from "./components/UserInfo"
 import UserInfoSet from "./components/UserInfoSet"
 import { UserContext } from './context/index'
-import { useState } from 'react';
+import { store } from './store/index'
 
 function App() {
   console.log('App.jsx render');
-
-  const [userState, setUserState] = useState({ name: 'Bojack', age: '24' });
 
   return (
     <div className="App">
       <div className="child">App</div>
 
-      <UserContext.Provider value={{ userState, setUserState }}>
+      <UserContext.Provider value={store}>
         <FirstChild></FirstChild>
         <SecendChild><UserInfo></UserInfo></SecendChild>
         <LastChild><UserInfoSet></UserInfoSet></LastChild>
