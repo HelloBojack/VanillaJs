@@ -1,10 +1,18 @@
 import { useContext, useEffect, useState, createContext } from 'react'
 
 const Context = createContext(null)
+
+const setState = (newState) => {
+  store.state = newState
+  store.listeners.map(listener => listener(store.state))
+}
+let dispatch = (action) => {
+  setState(store.reducer(store.state, action))
+}
 export const Provider = ({ store, children }) => {
-  return (<Context.Provider value={store}>
+  return <Context.Provider value={store}>
     {children}
-  </Context.Provider >)
+  </Context.Provider >
 }
 export const createReducer = (initialState, reducer) => {
   store.state = initialState;
@@ -15,10 +23,6 @@ export const createReducer = (initialState, reducer) => {
 const store = {
   state: {},
   reducer: {},
-  setState(newState) {
-    store.state = newState
-    store.listeners.map(listener => listener(store.state))
-  },
   listeners: [],
   subscribe(fn) {
     store.listeners.push(fn)
@@ -27,6 +31,15 @@ const store = {
       store.listeners.splice(index, 1)
     }
   },
+}
+
+const preDispatch = dispatch
+dispatch = (action) => {
+  if (typeof action === 'function') {
+    action(dispatch)
+  } else {
+    preDispatch(action)
+  }
 }
 
 const isChanged = (oldState, newState) => {
@@ -42,15 +55,11 @@ const isChanged = (oldState, newState) => {
 
 export const connect = (selector, dispatcher) => (Component) => {
   return (props) => {
-    const { state, setState, subscribe, reducer } = useContext(Context);
-    const dispatch = (action) => {
-      setState(reducer(state, action))
-    }
+    const { state, subscribe } = useContext(Context);
+
     const [_, update] = useState({});
-
     const data = selector ? selector(state) : { state };
-    const dispatcherFn = dispatcher ? dispatcher(dispatch) : dispatch;
-
+    const dispatcherFn = dispatcher ? dispatcher(dispatch) : { dispatch };
     useEffect(() => subscribe(() => {
       const newData = selector ? selector(store.state) : { state: store.state };
       if (isChanged(data, newData)) {
