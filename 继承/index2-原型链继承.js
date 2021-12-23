@@ -1,6 +1,9 @@
 function Parent() {
   this.names = ['kevin', 'daisy'];
 }
+Parent.prototype.getName = function () {
+  console.log(this.names);
+}
 
 function Child(name) {
   this.name = name
@@ -20,6 +23,7 @@ var child2 = new Child('c2');
 console.log(child2.names); // ["kevin", "daisy", "yayu"]
 console.log(child2.name); // c2
 
+child1.getName(); // ["kevin", "daisy", "yayu"]
 
 // 原理：利用原型链向上查找的机制实现继承，
 // 给 Child.prototype 赋值为父类的一个实例，
