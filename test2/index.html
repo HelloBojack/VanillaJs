@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<style>
+  * {
+    padding: 0;
+    margin: 0;
+  }
+
+  .shopDetail {
+    height: 300px;
+    width: 100%;
+    background: yellow;
+    text-align: center;
+    position: relative;
+  }
+
+  .shopDetail .title {
+    font-size: 30px;
+    font-weight: bold;
+    position: absolute;
+    bottom: 0;
+    display: block;
+    width: 100%;
+  }
+
+  .shopList .logo {
+    width: 100px;
+    height: 100px;
+    background: orange;
+
+  }
+
+  .shopList .item {
+    width: 100%;
+    height: 100px;
+    position: relative;
+    border-bottom: 1px solid #fff;
+  }
+
+  .shopList .title {
+    position: absolute;
+    left: 150px;
+    top: 0px;
+    font-size: 24px;
+  }
+
+  .price {
+    position: absolute;
+    left: 150px;
+    top: 50px;
+    font-size: 20px;
+  }
+
+  .count {
+    display: none;
+    width: 20px;
+    height: 20px;
+    background: red;
+    position: absolute;
+    right: 10px;
+    top: 40px;
+    font-size: 10px;
+    border-radius: 50%;
+    text-align: center;
+    line-height: 20px;
+    color: #fff;
+    z-index: 2;
+  }
+
+  .add {
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    width: 40px;
+    height: 40px;
+    background: yellow;
+    text-align: center;
+    line-height: 40px;
+    color: #fff;
+    font-size: 20px;
+    font-weight: bold;
+  }
+
+  .bottom {
+    width: 90%;
+    margin: 0 auto;
+    height: 100px;
+    background: #000;
+    position: fixed;
+    bottom: 0;
+    border-radius: 50px;
+    color: #fff;
+    display: flex;
+    line-height: 100px;
+    font-size: 20px;
+    left: 5%;
+  }
+
+  .bottom .title {
+    width: 150px;
+    height: 100%;
+    text-align: center;
+    line-height: 100px;
+    border-right: 1px solid #fff;
+
+  }
+
+  .bottom .priceTotal {
+    width: 300px;
+    color: blue;
+    padding-left: 20px;
+  }
+
+  .clean,
+  .settlement {
+    margin: 0 10px;
+  }
+</style>
+
+<body>
+  <div class="shopMall">
+    <div class="shopDetail">
+      <p class="title">商品列表</p>
+    </div>
+    <div class="shopList">
+      <div class="item" data-id="ITEM0001">
+        <div class="logo"></div>
+        <p class="title">商品 1</p>
+        <p class="price">￥30</p>
+        <p class="count">0</p>
+        <div class="add">+</div>
+      </div>
+      <div class="item" data-id="ITEM0013">
+        <div class="logo"></div>
+        <p class="title">商品 2</p>
+        <p class="price">￥50</p>
+        <p class="count">0</p>
+        <div class="add">+</div>
+      </div>
+    </div>
+    <div class="bottom">
+      <div class="title">购物⻋</div>
+      <div class="priceTotal">￥0</div>
+      <div class="clean">清空</div>
+      <div class="settlement">结算</div>
+    </div>
+  </div>
+</body>
+
+<script>
+  add = document.getElementsByClassName('add')
+  for (let index = 0; index < add.length; index++) {
+    add[index].onclick = function () {
+      this.parentNode.getElementsByClassName('count')[0].style.display = 'block'
+      this.parentNode.getElementsByClassName('count')[0].innerText = Number(this.parentNode.getElementsByClassName('count')[0].innerText) + 1
+
+    }
+  }
+</script>
+<script src="index.js"></script>
+
+</html>
