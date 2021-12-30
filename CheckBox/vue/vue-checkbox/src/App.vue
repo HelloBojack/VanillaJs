@@ -5,7 +5,10 @@ import CheckBox from "./components/CheckBox.vue";
 </script>
 
 <template>
-  <CheckBox></CheckBox>
+  <CheckBox>
+    <template v-slot:header>Hello</template> 
+    <template v-slot:footer>World</template> 
+    </CheckBox>
 </template>
 
 <style>

@@ -1,9 +1,11 @@
 
 <template>
- <div v-bind="info">
-   <span>全选</span>
+  <slot name="header"></slot>
+
+  <div v-bind="info">
+  <span>全选</span>
     <input type="checkbox" :checked="checkedAll" @change="changeCheckAll">
- </div>
+  </div>
   <div v-for="item in list" :key="item.id">
   <label :for="item.id">
     <input type="checkbox" v-model="checkedList" :id="item.id" :value="item.ctx">
@@ -12,6 +14,7 @@
     
   </div>
   <div>{{checkedList}}</div>
+  <slot name="footer"></slot>
 </template>
 <script setup>
 import { ref,reactive } from "vue";
