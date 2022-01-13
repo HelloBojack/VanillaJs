@@ -6,18 +6,15 @@ import CheckBox from "./components/CheckBox.vue";
 
 <template>
   <CheckBox>
-    <template v-slot:header>Hello</template> 
-    <template v-slot:footer>World</template> 
-    </CheckBox>
+    <template #header>Hello</template> 
+    <template #footer>World</template> 
+    
+  </CheckBox>
 </template>
 
 <style>
 #app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
   text-align: center;
-  color: #2c3e50;
   margin-top: 60px;
 }
 </style>
