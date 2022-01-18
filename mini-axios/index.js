@@ -1,4 +1,5 @@
 import InterceptorManager from './InterceptorManager.js'
+import CancelToken from './CancelToken.js'
 function Axios(config) {
   this.default = config;
   this.interceptors = {
@@ -26,7 +27,6 @@ Axios.prototype.request = function (config) {
   })
   while (chain.length) {
     promise = promise.then(chain.shift(), chain.shift())
-    console.log(promise)
   }
   return promise
 }
@@ -35,6 +35,7 @@ function dispatchRequest(config) {
   return xhrAdapter(config).then(res => {
     return res
   }, err => {
+    console.log(err)
     throw err
   })
 }
@@ -48,6 +49,13 @@ function xhrAdapter(config) {
       xhr.setRequestHeader(key, config.headers[key])
     })
     xhr.send()
+    if (config.cancelToken) {
+      config.cancelToken.promise.then(message => {
+        xhr.abort()
+        console.log(message)
+        reject(new Error('请求取消' + message))
+      })
+    }
     xhr.onreadystatechange = function () {
       if (xhr.readyState === 4) {
         if (xhr.status >= 200 && xhr.status < 300) {
@@ -67,6 +75,7 @@ function xhrAdapter(config) {
         }
       }
     }
+
   })
 }
 
@@ -92,5 +101,7 @@ function createInstance(config) {
 }
 
 const axios = createInstance({ method: 'get' })
+
+axios.CancelToken = CancelToken
 
 window.axios = axios

@@ -9,7 +9,8 @@
 </head>
 
 <body>
-
+  <button>request</button>
+  <button>cancel</button>
 </body>
 <script src="index.js" type="module"></script>
 <script type="module">
@@ -20,11 +21,35 @@
   }, () => { })
 
   axios.interceptors.response.use((res) => {
+    console.log('res', res);
     return res.data
   }, () => { })
 
-  axios({ method: 'get', url: 'http://127.0.0.1:4523/mock/1456/user/info' })
-    .then(res => { console.log(res) })
+  const CancelToken = axios.CancelToken;
+  // console.dir(CancelToken);
+  const source = CancelToken.source();
+
+  const request = () => {
+    axios({ method: 'get', url: 'http://127.0.0.1:4523/mock/1456/user/info', cancelToken: source.token })
+      .then(res => { console.log(res) })
+      .catch(err => {
+        console.log('err', err);
+        // if (axios.isCancel(thrown)) {
+        //   console.log('Request canceled', thrown.message);
+        // } else {
+        //   // 处理错误
+        // }
+      });
+  }
+  const cancel = () => {
+    source.cancel('Operation canceled by the user.');
+  }
+
+
+  let buttons = document.querySelectorAll('button')
+  buttons[0].addEventListener('click', request)
+  buttons[1].addEventListener('click', cancel)
+
 </script>
 
 </html>
