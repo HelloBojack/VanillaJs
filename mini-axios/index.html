@@ -21,9 +21,10 @@
   }, () => { })
 
   axios.interceptors.response.use((res) => {
-    console.log('res', res);
     return res.data
-  }, () => { })
+  }, err => {
+    return new Promise.reject(err)
+  })
 
   const CancelToken = axios.CancelToken;
   // console.dir(CancelToken);
