@@ -1,9 +1,14 @@
+import InterceptorManager from './InterceptorManager.js'
 function Axios(config) {
   this.default = config;
-  this.interceptors = {}
+  this.interceptors = {
+    request: new InterceptorManager(),
+    response: new InterceptorManager()
+  }
 }
 
 Axios.prototype.request = function (config) {
+  config.headers = config.headers || {}
   if (!config.method) {
     config.method = this.default.method ? this.default.method : 'get'
   }
@@ -12,8 +17,16 @@ Axios.prototype.request = function (config) {
   var promise = Promise.resolve(config)
   // 3. 数组 var chain = [dispatchRequest, undefined];
   var chain = [dispatchRequest, undefined];
+  // 4. 拦截器
+  this.interceptors.request.handlers.forEach(handler => {
+    chain.unshift(handler.fulfilled, handler.rejected)
+  })
+  this.interceptors.response.handlers.forEach(handler => {
+    chain.push(handler.fulfilled, handler.rejected)
+  })
   while (chain.length) {
     promise = promise.then(chain.shift(), chain.shift())
+    console.log(promise)
   }
   return promise
 }
@@ -30,6 +43,10 @@ function xhrAdapter(config) {
   return new Promise((resolve, reject) => {
     let xhr = new XMLHttpRequest()
     xhr.open(config.method, config.url, true)
+    // 设置 header
+    Object.keys(config.headers).forEach(key => {
+      xhr.setRequestHeader(key, config.headers[key])
+    })
     xhr.send()
     xhr.onreadystatechange = function () {
       if (xhr.readyState === 4) {
@@ -76,5 +93,4 @@ function createInstance(config) {
 
 const axios = createInstance({ method: 'get' })
 
-axios({ method: 'get', url: 'http://127.0.0.1:4523/mock/1456/user/info' })
-  .then(res => { console.log(res) })
+window.axios = axios

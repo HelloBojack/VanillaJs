@@ -11,9 +11,20 @@
 <body>
 
 </body>
-<script src="index.js"></script>
-<script>
+<script src="index.js" type="module"></script>
+<script type="module">
+  axios.interceptors.request.use((config) => {
+    let token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc1JlZnJlc2giOmZhbHNlLCJyb2xlSWRzIjpbIjEzIl0sInVzZXJuYW1lIjoidGVzdCIsInVzZXJJZCI6MjQsInBhc3N3b3JkVmVyc2lvbiI6MiwiaWF0IjoxNjQxNTM3MjUzLCJleHAiOjE2NDE1NDQ0NTN9.Ik0gdTKqINM-aWYCWba2phKqB066x5n3xXWWIqY4BdA'
+    config.headers.Authorization = token;
+    return config
+  }, () => { })
 
+  axios.interceptors.response.use((res) => {
+    return res.data
+  }, () => { })
+
+  axios({ method: 'get', url: 'http://127.0.0.1:4523/mock/1456/user/info' })
+    .then(res => { console.log(res) })
 </script>
 
 </html>
