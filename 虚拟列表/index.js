@@ -77,4 +77,33 @@ btn.addEventListener("click", async () => {
   //   });
   // }
   // loopRender(total, pageNumber);
+
+  const blank = document.querySelector(".blank");
+  let pageSize = 20;
+  let pageNumber = 1;
+  let totalPage = total / pageSize;
+  container.setAttribute("style", "height:100px;overflow:scroll");
+  function render(pageNumber) {
+    if (totalPage < pageNumber) return;
+    requestAnimationFrame(() => {
+      let fragment = document.createDocumentFragment();
+      for (
+        let i = pageNumber * pageSize;
+        i < pageNumber * pageSize + pageSize;
+        i++
+      ) {
+        let li = document.createElement("li");
+        li.innerText = `${pageNumber}---${i}`;
+        fragment.appendChild(li);
+      }
+      container.insertBefore(fragment, blank);
+    });
+  }
+  let Observer = new IntersectionObserver((entries) => {
+    if (entries[0].intersectionRatio > 0) {
+      console.log("pageNumber", pageNumber);
+      pageNumber += 1;
+    }
+  });
+  Observer.observe(blank);
 });
