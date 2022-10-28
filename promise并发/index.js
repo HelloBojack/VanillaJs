@@ -1,44 +1,50 @@
-function limitLoad(urls, handler, limit) {
-  const sequence = [].concat(urls)
-  let promise = []
-  promise = sequence.splice(0, limit).map((url, index) => {
-    return handler(url).then(() => {
-      return index
-    })
-  })
-  let p = Promise.race(promise)
-  // for循环给p赋值相当于.then().then()链式调用
-  for (let i = 0; i < sequence.length; i++) {
-    p = p.then(res => {
-      promise[res] = handler(sequence[i]).then(() => {
-        return res
-      })
-      return Promise.race(promise)
-    })
-  }
-}
-
 const urls = [
-  { info: '1', time: 2000 },
-  { info: '2', time: 1000 },
-  { info: '3', time: 2000 },
-  { info: '4', time: 2000 },
-  { info: '5', time: 3000 },
-  { info: '6', time: 1000 },
-  { info: '7', time: 2000 },
-  { info: '8', time: 2000 },
-  { info: '9', time: 3000 },
-  { info: '10', time: 1000 }
-]
+  "https://echo.apifox.com/status/200",
+  "https://echo.apifox.com/status/200",
+  "https://echo.apifox.com/status/200",
+  "https://echo.apifox.com/status/200",
+  "https://echo.apifox.com/status/200",
+  "https://echo.apifox.com/status/200",
+];
 
-function loadImg(url) {
-  return new Promise((reslove, reject) => {
-    console.log(url.info + '---start')
-    setTimeout(() => {
-      console.log(url.info, 'ok!!!')
-      reslove()
-    }, url.time)
-  })
-}
+const sendRequest = (urls, max = 2) => {
+  let allLens = urls.length;
+  let res = Array.from(allLens);
+  let finishCnt = 0;
+  return new Promise((resolve, reject) => {
+    while (finishCnt < max) {
+      next();
+    }
+    function next() {
+      let current = finishCnt++;
+      const url = urls[current];
+      console.log(`开始 ${current}`, new Date().toLocaleString());
 
-limitLoad(urls, loadImg, 3)
+      if (current >= allLens) {
+        resolve(res);
+        return;
+      }
+
+      fetch(url)
+        .then((res) => {
+          console.log("res", res);
+          res[current] = res;
+          console.log(`完成 ${current}`, new Date().toLocaleString());
+          if (current < allLens) {
+            next();
+          }
+        })
+        .catch((err) => {
+          console.log(`结束 ${current}`, new Date().toLocaleString());
+          res[current] = err;
+          if (current < allLens) {
+            next();
+          }
+        });
+    }
+  });
+};
+
+sendRequest(urls).then((res) => {
+  console.log("res", res);
+});
