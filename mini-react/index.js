@@ -16,10 +16,10 @@ class ClassComponent extends Component {
     super(props);
   }
   render() {
-    return MReact.createElement("h1", {}, element);
+    return MReact.createElement("h1", {}, this.props.name);
   }
 }
-let el3 = MReact.createElement(ClassComponent, { name: 100 });
+let el3 = MReact.createElement(ClassComponent, { name: "bojack" });
 
 const rootNode = document.getElementById("root");
 // MReactDOM.render(element, rootNode);
