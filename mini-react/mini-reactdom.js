@@ -1,3 +1,32 @@
+function addEvent(dom, eventType, handler) {
+  let store = dom.store || (dom.store = {});
+  store[eventType] = handler;
+  if (!document[eventType]) {
+    document[eventType] = dispatchEvent;
+  }
+}
+function dispatchEvent(event) {
+  let { target, type } = event;
+  let eventType = `on${type}`;
+  let { store } = target;
+  let handler = store && store[eventType];
+
+  updateQueue.isBatchingUpdate = true;
+  let syntheticEvent = createSyntheticEvent(event);
+  handler && handler(syntheticEvent);
+  updateQueue.isBatchingUpdate = false;
+  updateQueue.batchUpdate();
+}
+
+function createSyntheticEvent(nativeEvent) {
+  let syntheticEvent = {};
+  for (const key in nativeEvent) {
+    syntheticEvent[key] = nativeEvent[key];
+  }
+  syntheticEvent.nativeEvent = nativeEvent;
+  return syntheticEvent;
+}
+
 function createDom(vdom) {
   let { type, props, content } = vdom;
   let dom;
@@ -51,7 +80,8 @@ function updataProps(dom, oldProps, newProps) {
         dom.style[styleKey] = styleArr[styleKey];
       }
     } else if (key.startsWith("on")) {
-      dom[key.toLocaleLowerCase()] = newProps[key];
+      // dom[key.toLocaleLowerCase()] = newProps[key];
+      addEvent(dom, key.toLocaleLowerCase(), newProps[key]);
     } else {
       dom[key] = newProps[key];
     }

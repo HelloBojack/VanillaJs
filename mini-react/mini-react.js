@@ -1,6 +1,16 @@
 const REACT_ELEMENT = "react.element";
 const REACT_TEXT = "react.text";
 
+const updateQueue = {
+  isBatchingUpdate: false, // 控制是否批量更新state  默认false，在事件处理函数触发的时候设置为true ,使得state 更新进行批量异步更新
+  updaters: [],
+  batchUpdate() {
+    updateQueue.updaters.forEach((updater) => updater.updateComponent());
+    updateQueue.updaters.length = 0; // 重置为0
+    updateQueue.isBatchingUpdate = false;
+  },
+};
+
 class Updater {
   constructor(classInstance) {
     this.classInstance = classInstance;
@@ -13,7 +23,11 @@ class Updater {
     this.emitUpdate();
   }
   emitUpdate() {
-    this.updateComponent();
+    if (updateQueue.isBatchingUpdate) {
+      updateQueue.updaters.push(this);
+    } else {
+      this.updateComponent(); // 触发组件更新
+    }
   }
   updateComponent() {
     if (this.penddingState.length > 0) {
@@ -22,7 +36,7 @@ class Updater {
   }
   getState() {
     this.penddingState.forEach((nextState) => {
-      this.classInstance.state = { ...this.classInstance.state, nextState };
+      this.classInstance.state = { ...this.classInstance.state, ...nextState };
     });
     this.penddingState.length = 0;
     return this.classInstance.state;
@@ -50,6 +64,7 @@ class Component {
     let newVNode = this.render();
     let oldVNode = this.oldVNode;
     let oldDom = oldVNode.dom;
+
     twoVNode(oldDom.parentNode, oldVNode, newVNode);
     this.oldVNode = newVNode;
   }

@@ -19,8 +19,8 @@ class ClassComponent extends Component {
     };
   }
   handleClick = () => {
-    console.log("click");
-    this.setState({ num: this.state.num++ });
+    this.setState({ num: this.state.num + 1 });
+    this.setState({ num: this.state.num + 1 });
   };
   render() {
     return MReact.createElement(
