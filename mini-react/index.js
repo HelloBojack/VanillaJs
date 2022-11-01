@@ -14,9 +14,21 @@ let el2 = MReact.createElement(FnCom, { name: 100 });
 class ClassComponent extends Component {
   constructor(props) {
     super(props);
+    this.state = {
+      num: 1,
+    };
   }
+  handleClick = () => {
+    console.log("click");
+    this.setState({ num: this.state.num++ });
+  };
   render() {
-    return MReact.createElement("h1", {}, this.props.name);
+    return MReact.createElement(
+      "button",
+      { onClick: this.handleClick },
+      this.props.name,
+      this.state.num
+    );
   }
 }
 let el3 = MReact.createElement(ClassComponent, { name: "bojack" });

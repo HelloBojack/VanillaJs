@@ -1,10 +1,3 @@
-class Component {
-  constructor(props) {
-    this.props = props;
-  }
-  static isClassComponent = true;
-}
-
 function createDom(vdom) {
   let { type, props, content } = vdom;
   let dom;
@@ -29,15 +22,18 @@ function createDom(vdom) {
       appendChild(children, dom);
     }
   }
-
+  //
+  vdom.dom = dom;
   return dom;
 }
 
 function mountClassCom(vdom) {
   let { type, props } = vdom;
   let classInstance = new type(props);
-  let dom = classInstance.render();
-  return createDom(dom);
+  let classVNode = classInstance.render();
+  //
+  classInstance.oldVNode = classVNode;
+  return createDom(classVNode);
 }
 function mountFnCom(vdom) {
   let { type, props } = vdom;
@@ -54,6 +50,8 @@ function updataProps(dom, oldProps, newProps) {
       for (const styleKey in styleArr) {
         dom.style[styleKey] = styleArr[styleKey];
       }
+    } else if (key.startsWith("on")) {
+      dom[key.toLocaleLowerCase()] = newProps[key];
     } else {
       dom[key] = newProps[key];
     }
@@ -88,7 +86,12 @@ function mount(vdom, container) {
   container.appendChild(rdom);
 }
 
+function twoVNode(parentDom, oldVNode, newVNode) {
+  let oldDom = oldVNode.dom;
+  let newDom = createDom(newVNode);
+  parentDom.replaceChild(newDom, oldDom);
+}
+
 const MReactDOM = {
   render,
-  Component,
 };
