@@ -28,7 +28,7 @@ function createSyntheticEvent(nativeEvent) {
 }
 
 function createDom(vdom) {
-  let { type, props, content } = vdom;
+  let { type, props, content, ref } = vdom;
   let dom;
   // type
   if (type == REACT_TEXT) {
@@ -53,6 +53,9 @@ function createDom(vdom) {
   }
   //
   vdom.dom = dom;
+  if (ref) {
+    ref.current = dom;
+  }
   return dom;
 }
 
@@ -60,12 +63,13 @@ function mountClassCom(vdom) {
   let { type, props } = vdom;
   let classInstance = new type(props);
   let classVNode = classInstance.render();
-  //
   classInstance.oldVNode = classVNode;
   return createDom(classVNode);
 }
 function mountFnCom(vdom) {
   let { type, props } = vdom;
+  console.log(type);
+
   let dom = type(props);
   return createDom(dom);
 }

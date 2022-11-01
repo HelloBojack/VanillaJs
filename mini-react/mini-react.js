@@ -69,6 +69,13 @@ class Component {
     this.oldVNode = newVNode;
   }
 }
+
+function createRef() {
+  return {
+    current: null,
+  };
+}
+
 // 文本元素处理
 const toObject = (element) => {
   return typeof element == "string" || typeof element == "number"
@@ -105,4 +112,5 @@ function createElement(type, props, children) {
 const MReact = {
   createElement,
   Component,
+  createRef,
 };
