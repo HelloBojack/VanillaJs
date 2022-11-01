@@ -1,5 +1,110 @@
+let hooksState = [];
+let hooksIndex = [];
+let schellUpdate;
 
+function useState(initialState) {
+  hooksState[hooksIndex] = hooksState[hooksIndex] || initialState;
+  let currentIndex = hooksIndex;
+  function setState(newState) {
+    hooksIndex[currentIndex] = newState;
+    schellUpdate();
+  }
 
+  return [hooksState[hooksIndex++], setState];
+}
+
+function useReducer(reducer, initialState) {
+  hooksState[hooksIndex] = hooksState[hooksIndex] || initialState;
+  let currentIndex = hooksIndex;
+  function dispatch(action) {
+    hooksState[currentIndex] = reducer(hooksState[currentIndex], action);
+    schellUpdate();
+  }
+
+  return [hooksState[hooksIndex++], dispatch];
+}
+
+function useMemo(factory, deps) {
+  if (hooksState[hooksIndex]) {
+    let [oldMemo, oldDeps] = hooksState[hooksIndex];
+    if (deps.every((dep, index) => dep == oldDeps[index])) {
+      hooksIndex++;
+      return oldMemo;
+    } else {
+      let newMemo = factory();
+      hooksState[hooksIndex++] = [newMemo, deps];
+      return newMemo;
+    }
+  } else {
+    let newMemo = factory();
+    hooksState[hooksIndex++] = [newMemo, deps];
+    return newMemo;
+  }
+}
+function useCallback(callback, deps) {
+  if (hooksState[hooksIndex]) {
+    let [oldcallback, oldDeps] = hooksState[hooksIndex];
+    if (deps.every((dep, index) => dep == oldDeps[index])) {
+      hooksIndex++;
+      return oldcallback;
+    } else {
+      hooksState[hooksIndex++] = [callback, deps];
+      return callback;
+    }
+  } else {
+    hooksState[hooksIndex++] = [callback, deps];
+    return callback;
+  }
+}
+
+function useEffect(callback, deps) {
+  if (hooksState[hooksIndex]) {
+    // 有数据
+    let [oldcallback, oldDeps] = hooksState[hooksIndex];
+    if (deps.every((dep, index) => dep == oldDeps[index])) {
+      hooksIndex++;
+    } else {
+      oldcallback && oldcallback();
+      setTimeout(() => {
+        hooksState[hooksIndex] = [callback(), deps];
+      }, 0);
+      hooksIndex++;
+    }
+  } else {
+    // 没数据
+    setTimeout(() => {
+      hooksState[hooksIndex] = [callback(), deps];
+    }, 0);
+    hooksIndex++;
+  }
+}
+
+function useLayoutEffect(callback, deps) {
+  if (hooksState[hooksIndex]) {
+    // 有数据
+    let [oldcallback, oldDeps] = hooksState[hooksIndex];
+    if (deps.every((dep, index) => dep == oldDeps[index])) {
+      hooksIndex++;
+    } else {
+      oldcallback && oldcallback();
+      queueMicrotask(() => {
+        hooksState[hooksIndex] = [callback(), deps];
+      }, 0);
+      hooksIndex++;
+    }
+  } else {
+    // 没数据
+    queueMicrotask(() => {
+      hooksState[hooksIndex] = [callback(), deps];
+    }, 0);
+    hooksIndex++;
+  }
+}
+
+function useRef(initialState) {
+  hooksState[hooksIndex] = hooksState[hooksIndex] || initialState;
+  return hooksState[hooksIndex++];
+}
 
 function addEvent(dom, eventType, handler) {
   let store = dom.store || (dom.store = {});
@@ -115,6 +220,10 @@ function appendChild(children, dom) {
 
 function render(vdom, container) {
   mount(vdom, container);
+  schellUpdate = () => {
+    hooksIndex = 0;
+    twoVNode(container, vdom, vdom);
+  };
 }
 
 function mount(vdom, container) {
@@ -126,7 +235,7 @@ function twoVNode(parentDom, oldVNode, newVNode) {
   let oldDom = findOldDom(oldVNode);
   let newDom = createDom(newVNode);
   parentDom.replaceChild(newDom, oldDom);
-/*
+  /*
  1. 老新都没
  2. 老有 新没  删除老
  3. 老没 新有  创建新
