@@ -1,9 +1,21 @@
+class Component {
+  constructor(props) {
+    this.props = props;
+  }
+  static isClassComponent = true;
+}
+
 function createDom(vdom) {
   let { type, props, content } = vdom;
   let dom;
   // type
   if (type == REACT_TEXT) {
     dom = document.createTextNode(content);
+  } else if (typeof type == "function") {
+    if (type.isClassComponent) {
+      return mountClassCom(vdom);
+    }
+    return mountFnCom(vdom);
   } else {
     dom = document.createElement(type);
   }
@@ -14,11 +26,23 @@ function createDom(vdom) {
     // children
     let children = props.children;
     if (children) {
-      appendChild(dom, children);
+      appendChild(children, dom);
     }
   }
 
   return dom;
+}
+
+function mountClassCom(vdom) {
+  let { type, props } = vdom;
+  let classInstance = new type(props);
+  let dom = classInstance.render();
+  return createDom(dom);
+}
+function mountFnCom(vdom) {
+  let { type, props } = vdom;
+  let dom = type(props);
+  return createDom(dom);
 }
 
 function updataProps(dom, oldProps, newProps) {
@@ -44,10 +68,10 @@ function updataProps(dom, oldProps, newProps) {
   }
 }
 
-function appendChild(dom, children) {
+function appendChild(children, dom) {
   // 1. 1个
   // 2. 多个
-  console.log(dom, children);
+  children = toObject(children);
   if (typeof children == "object" && children.type) {
     mount(children, dom);
   } else {
@@ -66,4 +90,5 @@ function mount(vdom, container) {
 
 const MReactDOM = {
   render,
+  Component,
 };

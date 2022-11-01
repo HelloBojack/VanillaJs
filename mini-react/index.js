@@ -2,8 +2,25 @@ const element = MReact.createElement(
   "div",
   { style: { color: "red" } },
   "Like",
-  "666",
-  createElement("div", { id: 123 }, "xlk")
+  123
 );
+
+function FnCom() {
+  return MReact.createElement("h1", {}, element);
+}
+
+let el2 = MReact.createElement(FnCom, { name: 100 });
+
+class ClassComponent extends Component {
+  constructor(props) {
+    super(props);
+  }
+  render() {
+    return MReact.createElement("h1", {}, element);
+  }
+}
+let el3 = MReact.createElement(ClassComponent, { name: 100 });
+
 const rootNode = document.getElementById("root");
-MReactDOM.render(element, rootNode);
+// MReactDOM.render(element, rootNode);
+MReactDOM.render(el3, rootNode);
