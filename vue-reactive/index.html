@@ -9,8 +9,19 @@
 </head>
 
 <body>
-
+  <div id="app"></div>
 </body>
 <script src="index.js"></script>
+<script>
+  const app=document.getElementById('app')
+  const state=reactive({name:'k',age:19,list:[1,2,3]})
+  effect(()=>{
+    app.innerHTML=state.name+state.age+state.list
 
+  })
+  setTimeout(()=>{
+    state.name='bojack'
+    state.list[100]=1
+  })
+</script>
 </html>
