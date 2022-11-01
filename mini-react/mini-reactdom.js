@@ -1,3 +1,6 @@
+
+
+
 function addEvent(dom, eventType, handler) {
   let store = dom.store || (dom.store = {});
   store[eventType] = handler;
@@ -68,10 +71,9 @@ function mountClassCom(vdom) {
 }
 function mountFnCom(vdom) {
   let { type, props } = vdom;
-  console.log(type);
-
-  let dom = type(props);
-  return createDom(dom);
+  let fnVNode = type(props);
+  vdom.oldVNode = fnVNode;
+  return createDom(fnVNode);
 }
 
 function updataProps(dom, oldProps, newProps) {
@@ -121,9 +123,32 @@ function mount(vdom, container) {
 }
 
 function twoVNode(parentDom, oldVNode, newVNode) {
-  let oldDom = oldVNode.dom;
+  let oldDom = findOldDom(oldVNode);
   let newDom = createDom(newVNode);
   parentDom.replaceChild(newDom, oldDom);
+/*
+ 1. 老新都没
+ 2. 老有 新没  删除老
+ 3. 老没 新有  创建新
+ 4. 两个都有 类型不同 删除老 创建新
+ 5. 两个都有 
+    1. 都是文本类型 复用DOM 修改textContent
+    2. 原生类型
+    3. 类组件 
+    4. 函数组件
+  
+  1. old 创建map映射表 map {key:dom}
+  2.
+  3. 遍历new 通过key查找 有->复用
+*/
+}
+function findOldDom(oldVNode) {
+  if (!oldVNode) return null;
+  if (oldVNode.dom) {
+    return oldVNode.dom;
+  } else {
+    findOldDom(oldVNode.oldVNode);
+  }
 }
 
 const MReactDOM = {

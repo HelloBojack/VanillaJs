@@ -20,13 +20,34 @@ class ClassComponent extends Component {
       { onClick: this.handleClick, ref: this.btn },
       this.props.name,
       this.state.num,
-      MReact.createElement(FnCom, { name: "KKK", ref: this.div })
+      MReact.createElement(FnCom, {
+        name: this.props.name,
+        num: this.state.num,
+        ref: this.div,
+      })
     );
   }
 }
 
-function FnCom({ name, ref }) {
-  return MReact.createElement("div", { ref: ref }, element, name);
+function FnCom({ name, num, ref }) {
+  return MReact.createElement(
+    "div",
+    { ref: ref },
+    MReact.createElement(ClassComponent2, { name, num })
+  );
+}
+class ClassComponent2 extends Component {
+  constructor(props) {
+    super(props);
+  }
+  render() {
+    return MReact.createElement(
+      "div",
+      { name: this.props.name },
+      this.props.name,
+      this.props.num
+    );
+  }
 }
 
 let el2 = MReact.createElement(ClassComponent, {

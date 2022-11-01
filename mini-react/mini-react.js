@@ -63,7 +63,7 @@ class Component {
   forceUpdata() {
     let newVNode = this.render();
     let oldVNode = this.oldVNode;
-    let oldDom = oldVNode.dom;
+    let oldDom = findOldDom(oldVNode);
 
     twoVNode(oldDom.parentNode, oldVNode, newVNode);
     this.oldVNode = newVNode;
