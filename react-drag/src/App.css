@@ -1,0 +1,41 @@
+*{
+  margin: 0;
+  padding: 0;
+}
+.Wrapper{
+  height: 60vh;
+  width: 70vw;
+  padding: 3rem;
+  margin: 0 auto;
+
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-template-rows: repeat(3, 1fr);
+  place-items: center;
+}
+.placeholder{
+  border: .7rem dashed hsl(192, 100%, 50%);
+  padding: .7rem;
+  line-height: 7rem;
+}
+.placeholder.target{
+  background-color: rgba(255,255,255, .7);
+  border: .7rem dashed hsl(32, 100%, 50%);
+}
+.item{
+  border: .3rem dotted hsl(128, 100%, 50%);
+  width: 7rem;
+  height: 7rem;
+  padding: .1rem;
+  font-size: 4rem;
+  background-color: hsl(168, 80%, 80%);
+  color: hsl(30, 90%, 50%);
+  font-weight: bold;
+  cursor:grab;
+  text-align: center
+}
+.item.dragItem{
+  border: .3rem dotted red;
+  background-color: hsl(168, 60%, 90%);
+  color: white;
+}
