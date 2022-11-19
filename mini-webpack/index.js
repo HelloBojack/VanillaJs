@@ -4,13 +4,33 @@ import traverse from "@babel/traverse";
 import path from "path";
 import ejs from "ejs";
 import { transformFromAst } from "babel-core";
+import JSONLoader from "./JSONLoader.js";
+
+const config = {
+  module: {
+    rules: [
+      {
+        test: /\.json/,
+        use: JSONLoader,
+      },
+    ],
+  },
+};
 
 let id = 0;
 
 function createAsset(filePath) {
   // 1. 获取文件内容
-  const source = fs.readFileSync(filePath, "utf-8");
+  let source = fs.readFileSync(filePath, "utf-8");
   // console.log(source);
+
+  // loader
+  const loader = config.module.rules;
+  loader.forEach(({ test, use }) => {
+    if (test.test(filePath)) {
+      source = use(source);
+    }
+  });
 
   // 2. 获取依赖关系
   const ast = parser.parse(source, {
@@ -28,7 +48,6 @@ function createAsset(filePath) {
   const { code } = transformFromAst(ast, null, {
     presets: ["env"],
   });
-  console.log(code);
 
   return {
     filePath,
