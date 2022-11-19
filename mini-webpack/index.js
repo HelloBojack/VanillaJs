@@ -5,6 +5,8 @@ import path from "path";
 import ejs from "ejs";
 import { transformFromAst } from "babel-core";
 import JSONLoader from "./JSONLoader.js";
+import changeOutputPath from "./changeOutputPath.js";
+import { SyncHook } from "tapable";
 
 const config = {
   module: {
@@ -15,9 +17,13 @@ const config = {
       },
     ],
   },
+  plugins: [new changeOutputPath()],
 };
 
 let id = 0;
+const hooks = {
+  emitFile: new SyncHook(["context"]),
+};
 
 function createAsset(filePath) {
   // 1. 获取文件内容
@@ -71,6 +77,12 @@ function createGraph() {
   return queue;
 }
 
+function initPlugins() {
+  const plugins = config.plugins;
+  plugins.forEach((plugin) => plugin.apply(hooks));
+}
+
+initPlugins();
 const graph = createGraph();
 
 function build(graph) {
@@ -82,7 +94,14 @@ function build(graph) {
   }));
   const code = ejs.render(template, { data });
 
-  fs.writeFileSync("./dist/bundle.js", code);
+  let output = "./dist/bundle.js";
+  const context = {
+    changeOutputPath(path) {
+      output = path;
+    },
+  };
+  hooks.emitFile.call(context);
+  fs.writeFileSync(output, code);
 }
 
 build(graph);
