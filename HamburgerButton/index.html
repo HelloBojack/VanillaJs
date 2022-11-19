@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <style>
+    *{
+      margin: 0;
+      padding: 0;
+      box-sizing: content-box;
+    }
+    body{
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: #000;
+      height: 100vh;
+    }
+    .btn {
+      width: 200px;
+      height: 220px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      align-items: center;
+      cursor: pointer;
+      transition: transform 0.3s;
+    }
+    .btn_line {
+      position: relative;
+      width: 100%;
+      height: 25px;
+      background:linear-gradient(90deg,#ba59b7,#00efff,#ba59b7);
+      border-radius: 20px;
+      z-index: 2;
+      transition: transform 0.3s;
+    }
+    .btn_line_short{
+      position: relative;
+      width: 50%;
+      align-self: flex-end;
+      transform-origin: left;
+      background:linear-gradient(90deg,#ba59b7,#00efff);
+      z-index: 1;
+      transition: transform 0.3s;
+    }
+    .btn_line_short:nth-child(1){
+      align-self: flex-start;
+      transform-origin: right;
+      background:linear-gradient(90deg,#00efff,#ba59b7);
+    }
+    .btn_open {
+      transform: rotate(-45deg);
+    }
+    .btn_open .btn_line_short{
+      transform: rotate(-90deg);
+    }
+  </style>
+</head>
+
+<body>
+  <a href="#" class="btn">
+    <span class="btn_line btn_line_short"></span>
+    <span class="btn_line"></span>
+    <span class="btn_line btn_line_short"></span>
+  </a>
+</body>
+<script>
+  let btn = document.querySelector('.btn')
+  btn.addEventListener('click',()=>{
+    btn.classList.toggle('btn_open')
+  })
+</script>
+
+</html>
