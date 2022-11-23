@@ -1,2 +1,9 @@
-let arr =[1,1,2,2,3,3,4,3,2,1]
-
+class A {
+  toString() {
+    return "123";
+  }
+}
+Object.prototype.toString = () => {
+  return "1";
+};
+console.log(Object.prototype.toString.call(A));

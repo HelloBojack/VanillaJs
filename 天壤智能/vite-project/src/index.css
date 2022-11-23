@@ -1,0 +1,103 @@
+*{
+  margin: 0;
+  padding: 0;
+  /* box-sizing: border-box; */
+  font-size: 12px;
+}
+#root{
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.App{
+  width: 500px;
+  height: 500px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+.bigImg{
+  width: 500px;
+  height: 400px;
+}
+img{
+  width: 100%;
+  height: 100%;
+  object-fit:cover;
+}
+.btnRow{
+  display: flex;
+  width: 100%;
+  height: 100px;
+  margin-top:20px;
+}
+.imgList {
+  width: 100%;
+  display: flex;
+  overflow-x: scroll;
+  overflow-y: hidden;
+  height: calc(100% + 17px);
+  margin: 0 10px;
+}
+.imgList div{
+  margin-right:10px ;
+  width: 80px;
+  height: 100px;
+  border-radius: 4px;
+  flex-shrink: 0;
+  position: relative;
+}
+
+.uploadBtn ,.savaBtn{
+  display: block;
+  width: 50px;
+  height: 100%;
+  color: white;
+  border: 1px dashed #1890FF;
+  line-height: 100px;
+  text-align: center;
+  background:#1890FF;
+}
+.loading{
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.3);
+  text-align: center;
+  line-height: 100px;
+  cursor: pointer;
+}
+.name{
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 20px;
+  background: #ccc;
+  text-align: center;
+}
+.delete{
+  position: absolute;
+  top: 0;
+  right: 0;
+  background: red;
+  cursor: pointer;
+  text-align: center;
+  line-height: 15px;
+  width: 15px;
+  height: 15px;
+  border-radius: 10px;
+  color: white;
+  border: 1px solid white ;
+}
+button[disabled]{
+  background: #ccc;
+}
+label,button{
+  cursor: pointer;
+}
